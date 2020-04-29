@@ -1,5 +1,6 @@
 import pandas as pd
 
+from functions.cluster.ClusterProduct import cluster_product
 from models.RecordList import RecordList
 
 
@@ -8,7 +9,8 @@ def get_final_data(df_initial):
     df_initial.dropna(axis=0, subset=['CustomerID'], inplace=True)
     df_initial.drop_duplicates(inplace=True)
     # return get_clean_data(df_initial)
-    return RecordList(get_clean_data(df_initial)).toList()
+    # return RecordList(get_clean_data(df_initial)).toList()
+    return RecordList(cluster_product(df_initial)).toList()
 
 
 def get_clean_data(df_initial):
@@ -31,7 +33,8 @@ def get_clean_data(df_initial):
         elif df_test.shape[0] > 1:
             df_test.sort_index(axis=0, ascending=False, inplace=True)
             for ind, val in df_test.iterrows():
-                if val['Quantity'] < -col['Quantity']: continue
+                if val['Quantity'] < -col['Quantity']:
+                    continue
                 df_cleaned.loc[ind, 'QuantityCanceled'] = -col['Quantity']
                 entry_to_remove.append(index)
                 break

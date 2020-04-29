@@ -72,7 +72,10 @@ def get_drive_csv():
 @app.route('/get/records/cleaned', methods=['GET'])
 def get_records_clean():
     if request.method == 'GET':
-        df = get_Drive_csv(google_drive_url=app.config['URL_DRIVE'])
+        num = None
+        if 'num' in request.args.keys():
+            num = int(request.args.get('num'))
+        df = get_Drive_csv(google_drive_url=app.config['URL_DRIVE'], numberOfRow=num)
         return jsonify({'records': get_final_data(df), 'size': df.shape[0]})
     return jsonify(message='request failed')
 
